@@ -1,6 +1,5 @@
 from src.app.port.inbound.i_create_task_usecase import (
     CreateTaskRequest,
-    CreateTaskResponse,
     ICreateTaskUsecase,
 )
 from src.app.port.inbound.i_delete_task_usecase import (
@@ -49,7 +48,7 @@ class CliController:
             else:
                 print("Invalid choice")
 
-    def create_task(self) -> CreateTaskResponse:
+    def create_task(self) -> None:
         title = input("Enter task title: ")
         request = CreateTaskRequest(title=title)
 
@@ -57,7 +56,6 @@ class CliController:
 
         print("Task created successfully!")
         print(response.task.model_dump())
-        return response
 
     def show_tasks(self) -> None:
         print("------ Tasks ------")

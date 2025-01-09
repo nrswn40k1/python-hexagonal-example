@@ -1,0 +1,15 @@
+services:
+  python:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+      target: dev
+      args:
+        - UID=1000
+        - GID=1000
+    command: /bin/bash
+    tty: true
+    volumes:
+      - ..:/home/user/workspace
+    user: "user"
+    working_dir: /home/user/workspace

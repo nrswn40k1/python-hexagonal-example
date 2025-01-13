@@ -11,7 +11,13 @@ class ProgressStatusRequest(BaseModel):
 
 
 class ProgressStatusResponse(BaseModel):
-    task: Task
+    id: str
+    title: str
+    status: str
+
+    @classmethod
+    def create(cls, task: Task) -> "ProgressStatusResponse":
+        return cls(id=task.id, title=task.title, status=task.status.value)
 
 
 class FailedToProgressStatus(BaseModel):

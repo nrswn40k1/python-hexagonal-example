@@ -23,4 +23,4 @@ class CreateTaskUsecase(ICreateTaskUsecase):
     def _run(self, request: CreateTaskRequest) -> CreateTaskResponse:
         task = Task.create(title=request.title)
         self.task_repository.add(task)
-        return CreateTaskResponse(task=task)
+        return CreateTaskResponse.create(task)

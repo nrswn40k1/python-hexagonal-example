@@ -1,7 +1,7 @@
 from enum import Enum
 from uuid import uuid4
 
-from pydantic import BaseModel, Field, field_serializer
+from pydantic import BaseModel, Field
 
 
 class TaskStatus(Enum):
@@ -25,7 +25,3 @@ class Task(BaseModel):
         elif self.status == TaskStatus.IN_PROGRESS:
             self.status = TaskStatus.DONE
         return
-
-    @field_serializer("status")
-    def serialize_status(self, status: TaskStatus) -> str:
-        return status.value

@@ -18,4 +18,4 @@ class ShowTasksUsecase(IShowTasksUsecase):
 
     def _run(self) -> ShowTasksResponse:
         tasks = self.task_repository.load_all()
-        return ShowTasksResponse(tasks=tasks)
+        return ShowTasksResponse.create(tasks=tasks)

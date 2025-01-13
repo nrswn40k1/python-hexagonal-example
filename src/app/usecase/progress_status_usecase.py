@@ -26,4 +26,4 @@ class ProgressStatusUsecase(IProgressStatusUsecase):
         task = self.task_repository.load_by_id(request.task_id)
         task.progress_status()
         self.task_repository.update(task)
-        return ProgressStatusResponse(task=task)
+        return ProgressStatusResponse.create(task=task)

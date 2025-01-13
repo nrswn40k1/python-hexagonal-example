@@ -11,7 +11,13 @@ class CreateTaskRequest(BaseModel):
 
 
 class CreateTaskResponse(BaseModel):
-    task: Task
+    id: str
+    title: str
+    status: Literal["todo", "in_progress", "done"]
+
+    @classmethod
+    def create(cls, task: Task) -> "CreateTaskResponse":
+        return cls(id=task.id, title=task.title, status=task.status.value)
 
 
 class FailedToCreateTask(BaseModel):

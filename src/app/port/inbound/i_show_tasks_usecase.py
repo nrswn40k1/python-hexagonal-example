@@ -6,8 +6,22 @@ from pydantic import BaseModel
 from src.app.domain.model.task import Task
 
 
+class TaskDto(BaseModel):
+    id: str
+    title: str
+    status: Literal["todo", "in_progress", "done"]
+
+    @classmethod
+    def create(cls, task: Task) -> "TaskDto":
+        return cls(id=task.id, title=task.title, status=task.status.value)
+
+
 class ShowTasksResponse(BaseModel):
-    tasks: list[Task]
+    tasks: list[TaskDto]
+
+    @classmethod
+    def create(cls, tasks: list[Task]) -> "ShowTasksResponse":
+        return cls(tasks=[TaskDto.create(task) for task in tasks])
 
 
 class FailedToShowTasks(BaseModel):

@@ -1,13 +1,14 @@
 from typing import Union
 
 from src.adapter.inbound.cli.cli_controller import CliController
+from src.adapter.inbound.fastapi.fastapi_controller import FastAPIController
 from src.app.port.inbound.i_create_task_usecase import ICreateTaskUsecase
 from src.app.port.inbound.i_delete_task_usecase import IDeleteTaskUsecase
 from src.app.port.inbound.i_progress_status_usecase import IProgressStatusUsecase
 from src.app.port.inbound.i_show_tasks_usecase import IShowTasksUsecase
 from src.app.port.outbound.i_task_repository import ITaskRepository
 
-Controller = Union[CliController]
+Controller = Union[CliController | FastAPIController]
 
 
 def create_controller() -> Controller:
@@ -17,6 +18,10 @@ def create_controller() -> Controller:
 
     if CONTROLLER_TYPE == "cli":
         return CliController(*usecases)
+    elif CONTROLLER_TYPE == "fastapi":
+        from src.config import HOST, PORT
+
+        return FastAPIController(*usecases, port=PORT, host=HOST)
     else:
         raise ValueError(f"Invalid CONTROLLER_TYPE: {CONTROLLER_TYPE}")
 

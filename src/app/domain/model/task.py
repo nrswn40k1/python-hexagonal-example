@@ -20,12 +20,10 @@ class Task(BaseModel):
         return cls(title=title)
 
     def progress_status(self) -> None:
-        print("current status", self.status)
         if self.status == TaskStatus.TODO:
             self.status = TaskStatus.IN_PROGRESS
         elif self.status == TaskStatus.IN_PROGRESS:
             self.status = TaskStatus.DONE
-        print("updated status", self.status)
         return
 
     @field_serializer("status")

@@ -9,10 +9,17 @@ class DeleteTaskRequest(BaseModel):
 
 
 class DeleteTaskResponse(BaseModel):
-    result: Literal["success", "failure"]
+    success: bool = True
+
+
+class FailedToDeleteTask(BaseModel):
+    error_type: Literal["task_not_found", "unknown"]
+    error_msg: str = ""
 
 
 class IDeleteTaskUsecase(ABC):
     @abstractmethod
-    def run(self, request: DeleteTaskRequest) -> DeleteTaskResponse:
+    def run(
+        self, request: DeleteTaskRequest
+    ) -> DeleteTaskResponse | FailedToDeleteTask:
         pass

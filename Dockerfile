@@ -11,21 +11,39 @@ RUN apt-get update && apt-get install -y \
     sudo \
     curl
 
-# User and Group Setup
-RUN groupadd -g $GID user \
-    && useradd -m -s /bin/bash -u $UID -g $GID user \
-    && echo "user ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/user
-
 # Install Poetry
-RUN apt-get update && apt-get install -y \
-    && echo "alias poetry='sudo /root/.local/bin/poetry'" >> /home/user/.bash_aliases \
-    && curl -sSL https://install.python-poetry.org | POETRY_VERSION=2.0.0 python3 - \
+RUN curl -sSL https://install.python-poetry.org | POETRY_VERSION=2.0.0 python3 - \
     && poetry config virtualenvs.create false
+
+# ----------------------------------------------------------
+# --- リリース用ステージ ---
+FROM base as release
+RUN mkdir /app
+WORKDIR /app
+
+COPY pyproject.toml poetry.lock ./
+RUN poetry install --no-root --without dev
+
+COPY src/ /app/src
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+ENTRYPOINT [ "/bin/bash", "-c" , "./entrypoint.sh" ]
 
 
 # ----------------------------------------------------------
 # --- 開発用ステージ ---
 FROM base as dev
+
+# User and Group Setup
+RUN groupadd -g $GID user \
+    && useradd -m -s /bin/bash -u $UID -g $GID user \
+    && echo "user ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/user
+
+RUN apt-get update && apt-get install -y \
+    && echo "alias poetry='sudo /root/.local/bin/poetry'" >> /home/user/.bash_aliases
+
+# Install basic tools
 RUN apt-get update && apt-get install -y \
     git \
     bash-completion \

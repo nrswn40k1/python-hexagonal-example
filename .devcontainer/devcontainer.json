@@ -14,7 +14,8 @@
                 "ms-azuretools.vscode-docker",
                 "GitHub.vscode-pull-request-github",
                 "GitHub.vscode-github-actions",
-                "hashicorp.terraform"
+                "hashicorp.terraform",
+                "ms-vscode.makefile-tools"
             ],
             "settings": {
                 "[python]": {

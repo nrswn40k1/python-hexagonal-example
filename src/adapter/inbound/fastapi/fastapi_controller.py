@@ -4,19 +4,22 @@ from fastapi import FastAPI, HTTPException
 from src.app.port.inbound.i_create_task_usecase import (
     CreateTaskRequest,
     CreateTaskResponse,
+    FailedToCreateTask,
     ICreateTaskUsecase,
 )
 from src.app.port.inbound.i_delete_task_usecase import (
     DeleteTaskRequest,
-    DeleteTaskResponse,
+    FailedToDeleteTask,
     IDeleteTaskUsecase,
 )
 from src.app.port.inbound.i_progress_status_usecase import (
+    FailedToProgressStatus,
     IProgressStatusUsecase,
     ProgressStatusRequest,
     ProgressStatusResponse,
 )
 from src.app.port.inbound.i_show_tasks_usecase import (
+    FailedToShowTasks,
     IShowTasksUsecase,
     ShowTasksResponse,
 )
@@ -50,34 +53,39 @@ class FastAPIController:
     def create_endpoints(self, app: FastAPI):
         @app.post("/tasks", response_model=CreateTaskResponse)
         def create_task(request: CreateTaskRequest):
-            response = self.create_task_usecase.run(request)
-            if isinstance(response, CreateTaskResponse):
+            try:
+                response = self.create_task_usecase.run(request)
                 return response
-            raise HTTPException(status_code=500, detail=response.error_msg)
+            except FailedToCreateTask as e:
+                raise HTTPException(status_code=500, detail=str(e))
 
         @app.get("/tasks", response_model=ShowTasksResponse)
         def show_tasks() -> ShowTasksResponse:
-            response = self.show_tasks_usecase.run()
-            if isinstance(response, ShowTasksResponse):
+            try:
+                response = self.show_tasks_usecase.run()
                 return response
-            raise HTTPException(status_code=500, detail=response.error_msg)
+            except FailedToShowTasks as e:
+                raise HTTPException(status_code=500, detail=str(e))
 
         @app.patch("/tasks/progress/{task_id}", response_model=ProgressStatusResponse)
         def progress_status(task_id: str):
             request = ProgressStatusRequest(task_id=task_id)
-            response = self.progress_status_usecase.run(request)
-            if isinstance(response, ProgressStatusResponse):
+
+            try:
+                response = self.progress_status_usecase.run(request)
                 return response
-            if response.error_type == "task_not_found":
-                raise HTTPException(status_code=404, detail=response.error_msg)
-            raise HTTPException(status_code=500, detail=response.error_msg)
+            except FailedToProgressStatus as e:
+                if e.error_type == "task_not_found":
+                    raise HTTPException(status_code=404, detail=str(e))
+                raise HTTPException(status_code=500, detail=str(e))
 
         @app.delete("/tasks/{task_id}", status_code=204)
         def delete_task(task_id: str):
             request = DeleteTaskRequest(task_id=task_id)
-            response = self.delete_task_usecase.run(request)
-            if isinstance(response, DeleteTaskResponse):
-                return
-            if response.error_type == "task_not_found":
-                raise HTTPException(status_code=404, detail=response.error_msg)
-            raise HTTPException(status_code=500, detail=response.error_msg)
+
+            try:
+                self.delete_task_usecase.run(request)
+            except FailedToDeleteTask as e:
+                if e.error_type == "task_not_found":
+                    raise HTTPException(status_code=404, detail=str(e))
+                raise HTTPException(status_code=500, detail=str(e))

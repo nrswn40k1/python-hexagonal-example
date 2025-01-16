@@ -3,7 +3,7 @@ from typing import Literal
 
 from pydantic import BaseModel
 
-from src.app.domain.model.task import Task
+from src.app.domain.task import Task
 
 
 class TaskDto(BaseModel):
@@ -24,12 +24,13 @@ class ShowTasksResponse(BaseModel):
         return cls(tasks=[TaskDto.create(task) for task in tasks])
 
 
-class FailedToShowTasks(BaseModel):
-    error_type: Literal["unknown"]
-    error_msg: str = ""
+class FailedToShowTasks(Exception):
+    def __init__(self, error_type: Literal["unknown"], error_msg: str) -> None:
+        self.error_type = error_type
+        super().__init__(error_msg)
 
 
 class IShowTasksUsecase(ABC):
     @abstractmethod
-    def run(self) -> ShowTasksResponse | FailedToShowTasks:
+    def run(self) -> ShowTasksResponse:
         pass

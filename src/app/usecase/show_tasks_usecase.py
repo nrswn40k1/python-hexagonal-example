@@ -10,11 +10,11 @@ class ShowTasksUsecase(IShowTasksUsecase):
     def __init__(self, task_repository: ITaskRepository) -> None:
         self.task_repository = task_repository
 
-    def run(self) -> ShowTasksResponse | FailedToShowTasks:
+    def run(self) -> ShowTasksResponse:
         try:
             return self._run()
         except Exception as e:
-            return FailedToShowTasks(error_type="unknown", error_msg=str(e))
+            raise FailedToShowTasks(error_type="unknown", error_msg=str(e))
 
     def _run(self) -> ShowTasksResponse:
         tasks = self.task_repository.load_all()

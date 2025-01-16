@@ -3,7 +3,7 @@ from typing import Literal
 
 from pydantic import BaseModel
 
-from src.app.domain.model.task import Task
+from src.app.domain.task import Task
 
 
 class ProgressStatusRequest(BaseModel):

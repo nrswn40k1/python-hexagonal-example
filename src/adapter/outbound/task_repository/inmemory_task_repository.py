@@ -1,5 +1,5 @@
 from src.app.domain.exceptions import TaskNotFoundException
-from src.app.domain.model.task import Task
+from src.app.domain.task import Task
 from src.app.port.outbound.i_task_repository import ITaskRepository
 
 

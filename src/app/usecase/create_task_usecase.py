@@ -1,4 +1,4 @@
-from src.app.domain.model.task import Task
+from src.app.domain.task import Task
 from src.app.port.inbound.i_create_task_usecase import (
     CreateTaskRequest,
     CreateTaskResponse,

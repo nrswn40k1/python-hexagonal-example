@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from src.app.domain.model.task import Task
+from src.app.domain.task import Task
 
 
 class ITaskRepository(ABC):

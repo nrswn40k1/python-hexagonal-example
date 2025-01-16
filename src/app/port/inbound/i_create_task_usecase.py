@@ -20,14 +20,13 @@ class CreateTaskResponse(BaseModel):
         return cls(id=task.id, title=task.title, status=task.status.value)
 
 
-class FailedToCreateTask(BaseModel):
-    error_type: Literal["unknown"]
-    error_msg: str = ""
+class FailedToCreateTask(Exception):
+    def __init__(self, error_type: Literal["unknown"], error_msg: str) -> None:
+        self.error_type = error_type
+        super().__init__(error_msg)
 
 
 class ICreateTaskUsecase(ABC):
     @abstractmethod
-    def run(
-        self, request: CreateTaskRequest
-    ) -> CreateTaskResponse | FailedToCreateTask:
+    def run(self, request: CreateTaskRequest) -> CreateTaskResponse:
         pass

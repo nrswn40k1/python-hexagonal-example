@@ -20,14 +20,15 @@ class ProgressStatusResponse(BaseModel):
         return cls(id=task.id, title=task.title, status=task.status.value)
 
 
-class FailedToProgressStatus(BaseModel):
-    error_type: Literal["task_not_found", "unknown"]
-    error_msg: str = ""
+class FailedToProgressStatus(Exception):
+    def __init__(
+        self, error_type: Literal["task_not_found", "unknown"], error_msg: str
+    ):
+        self.error_type = error_type
+        super().__init__(error_msg)
 
 
 class IProgressStatusUsecase(ABC):
     @abstractmethod
-    def run(
-        self, request: ProgressStatusRequest
-    ) -> ProgressStatusResponse | FailedToProgressStatus:
+    def run(self, request: ProgressStatusRequest) -> ProgressStatusResponse:
         pass

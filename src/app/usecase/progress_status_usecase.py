@@ -12,15 +12,13 @@ class ProgressStatusUsecase(IProgressStatusUsecase):
     def __init__(self, task_repository: ITaskRepository) -> None:
         self.task_repository = task_repository
 
-    def run(
-        self, request: ProgressStatusRequest
-    ) -> ProgressStatusResponse | FailedToProgressStatus:
+    def run(self, request: ProgressStatusRequest) -> ProgressStatusResponse:
         try:
             return self._run(request)
         except TaskNotFoundException as e:
-            return FailedToProgressStatus(error_type="task_not_found", error_msg=str(e))
+            raise FailedToProgressStatus(error_type="task_not_found", error_msg=str(e))
         except Exception as e:
-            return FailedToProgressStatus(error_type="unknown", error_msg=str(e))
+            raise FailedToProgressStatus(error_type="unknown", error_msg=str(e))
 
     def _run(self, request: ProgressStatusRequest) -> ProgressStatusResponse:
         task = self.task_repository.load_by_id(request.task_id)

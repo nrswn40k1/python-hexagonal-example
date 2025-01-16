@@ -12,13 +12,11 @@ class CreateTaskUsecase(ICreateTaskUsecase):
     def __init__(self, task_repository: ITaskRepository) -> None:
         self.task_repository = task_repository
 
-    def run(
-        self, request: CreateTaskRequest
-    ) -> CreateTaskResponse | FailedToCreateTask:
+    def run(self, request: CreateTaskRequest) -> CreateTaskResponse:
         try:
             return self._run(request)
         except Exception as e:
-            return FailedToCreateTask(error_type="unknown", error_msg=str(e))
+            raise FailedToCreateTask(error_type="unknown", error_msg=str(e))
 
     def _run(self, request: CreateTaskRequest) -> CreateTaskResponse:
         task = Task.create(title=request.title)

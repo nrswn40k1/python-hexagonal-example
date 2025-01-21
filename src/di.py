@@ -30,7 +30,7 @@ def create_task_repository() -> ITaskRepository:
     from src.config import TASK_REPOSITORY_TYPE
 
     if TASK_REPOSITORY_TYPE == "inmemory":
-        from src.adapter.outbound.task_repository.inmemory_task_repository import (
+        from src.adapter.outbound.inmemory.inmemory_task_repository import (
             InMemoryTaskRepository,
         )
 

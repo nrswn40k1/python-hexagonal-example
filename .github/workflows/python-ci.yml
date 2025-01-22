@@ -28,7 +28,8 @@ jobs:
 
     - name: Setup Poetry
       run: |
-        poetry config virtualenvs.create false
+        poetry config virtualenvs.create true --local
+        poetry config virtualenvs.in-project true --local
         poetry install --no-root
 
     - name: Install plugin for annotating test failures

@@ -35,6 +35,11 @@ ENTRYPOINT [ "/bin/bash", "-c" , "./entrypoint.sh" ]
 # --- 開発用ステージ ---
 FROM base as dev
 
+# Install Tools
+RUN apt-get update && apt-get install -y \
+    vim \
+    tree
+
 # User and Group Setup
 RUN groupadd -g $GID user \
     && useradd -m -s /bin/bash -u $UID -g $GID user \

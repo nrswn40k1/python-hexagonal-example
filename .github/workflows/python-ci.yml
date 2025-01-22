@@ -35,11 +35,11 @@ jobs:
         poetry add pytest-github-actions-annotate-failures
 
     - name: Lint code with Ruff
-      run: ruff check --output-format=github
+      run: poetry run ruff check --output-format=github
       continue-on-error: true
 
     - name: Check code formatting with Ruff
-      run: ruff format --diff
+      run: poetry run ruff format --diff
       continue-on-error: true
 
     - name: Run tests

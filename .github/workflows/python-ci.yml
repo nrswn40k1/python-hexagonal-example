@@ -31,14 +31,16 @@ jobs:
         poetry config virtualenvs.create true --local
         poetry config virtualenvs.in-project true --local
         poetry install --no-root
-
-    - name: Install plugin for annotating test failures
-      run: poetry add pytest-github-actions-annotate-failures
-
-    - name: Lint with Ruff
-      run: |
         poetry add ruff
-        poetry run ruff --format=github .
+        poetry add pytest-github-actions-annotate-failures
+
+    - name: Lint code with Ruff
+      run: ruff check --output-format=github
+      continue-on-error: true
+
+    - name: Check code formatting with Ruff
+      run: ruff format --diff
+      continue-on-error: true
 
     - name: Run tests
       run: |

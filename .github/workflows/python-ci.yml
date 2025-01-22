@@ -36,7 +36,9 @@ jobs:
       run: poetry add pytest-github-actions-annotate-failures
 
     - name: Lint with Ruff
-      run: poetry run ruff --format=github .
+      run: |
+        poetry add ruff
+        poetry run ruff --format=github .
 
     - name: Run tests
       run: |
